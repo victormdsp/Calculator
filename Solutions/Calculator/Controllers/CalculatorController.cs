@@ -1,3 +1,4 @@
+using Calculator.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Calculator.Controllers;
@@ -8,6 +9,7 @@ public class CalculatorController : ControllerBase
 {
 
     private readonly ILogger<CalculatorController> _logger;
+    private Calcu calculator = new Calcu();
 
     public CalculatorController(ILogger<CalculatorController> logger)
     {
@@ -25,7 +27,7 @@ public class CalculatorController : ControllerBase
     {
         if (verifyIsNumber(firstNumber) && verifyIsNumber(secondNumber))
         {
-            return Ok((ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber)).ToString());
+            return Ok(calculator.Sum(firstNumber, secondNumber).ToString());
         }
 
         return BadRequest("Invalid Input");
@@ -36,7 +38,7 @@ public class CalculatorController : ControllerBase
     {
         if (verifyIsNumber(firstNumber) && verifyIsNumber(secondNumber))
         {
-            return Ok((ConvertToDecimal(firstNumber) * ConvertToDecimal(secondNumber)).ToString());
+            return Ok(calculator.Multiplication(firstNumber, secondNumber).ToString());
         }
 
         return BadRequest("Invalid Input");
@@ -47,7 +49,7 @@ public class CalculatorController : ControllerBase
     {
         if (verifyIsNumber(firstNumber) && verifyIsNumber(secondNumber))
         {
-            return Ok((ConvertToDecimal(firstNumber) / ConvertToDecimal(secondNumber)).ToString());
+            return Ok(calculator.Division(firstNumber, secondNumber).ToString());
         }
 
         return BadRequest("Invalid Input");
@@ -58,7 +60,7 @@ public class CalculatorController : ControllerBase
     {
         if (verifyIsNumber(firstNumber) && verifyIsNumber(secondNumber))
         {
-            return Ok((ConvertToDecimal(firstNumber) - ConvertToDecimal(secondNumber)).ToString());
+            return Ok(calculator.Subtraction((firstNumber), (secondNumber)).ToString());
         }
 
         return BadRequest("Invalid Input");
@@ -69,7 +71,7 @@ public class CalculatorController : ControllerBase
     {
         if (verifyIsNumber(number))
         {
-            return Ok(Math.Sqrt(ConvertToDouble(number)).ToString());
+            return Ok(calculator.SquareRoot((number)).ToString());
         }
 
         return BadRequest("Invalid Input");
@@ -80,34 +82,14 @@ public class CalculatorController : ControllerBase
     {
         if(verifyIsNumber(firstNumber) && verifyIsNumber(secondNumber))
         {
-            return Ok(((ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber)) / 2).ToString());
+            return Ok(calculator.Average(firstNumber ,secondNumber).ToString());
         }
 
         return BadRequest("Invalid Input");
     }
 
-    public double ConvertToDouble(string number)
-    {
-        if(double.TryParse(number, out double result))
-        {
-            return result;
-        }
-
-        return 0;
-    }
-
-    public decimal ConvertToDecimal(string number)
-    {
-        if (decimal.TryParse(number, out var decimalValue))
-        {
-            return decimalValue;
-        }
-
-        return 0;
-    }
-
     public bool verifyIsNumber(string number)
     {
-        return double.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out double result);   
+        return double.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out double result);
     }
 }
